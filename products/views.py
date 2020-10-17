@@ -4,7 +4,8 @@ from .models import Product
 
 # Create your views here.
 def home(request, *args, **kwargs):
-    return HttpResponse("Hello world")
+    context = {"name": "home"}
+    return render(request, "home.html", context)
 
 
 def product_detail_view(request, pk):
