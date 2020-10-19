@@ -13,7 +13,8 @@ def product_detail_view(request, pk):
         obj = Product.objects.get(id=pk)
     except Product.DoesNotExist:
         raise Http404
-    return HttpResponse(f"Product id : {obj.id}")
+    # return HttpResponse(f"Product id : {obj.id}")
+    return render(request, "products/detail.html", {"object": obj})
 
 
 def product_api_detail_view(request, pk):

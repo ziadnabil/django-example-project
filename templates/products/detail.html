@@ -1,0 +1,12 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<h1>products template: {{object.id}}</h1>
+
+<br />
+    <p>name: {{object.name}}</p>
+<br />
+
+{% include "products/detail_snippet.html" with product=object %}
+
+{% endblock %}
