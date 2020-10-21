@@ -3,7 +3,7 @@ from django.http import request
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, Http404
 from .models import Product
-
+from .forms import ProductForm
 
 """ def ordinary_view(request, *args, **kwargs):
     my_request_data = dict(request.GET)
@@ -50,6 +50,14 @@ def product_list_view(request, *args, **kwargs):
 
 
 def product_create_view(request):
-    print(request.POST)
-    print(request.GET)
+    # print(request.POST)
+    # print(request.GET)
+    if request.method == "POST":
+        post_data = request.POST or None
+        if post_data != None:
+            my_form = ProductForm(request.POST)
+            if my_form.is_valid():
+                input_name = my_form.cleaned_data.get("name")
+                Product.objects.create(name=input_name)
+            print("post_data", post_data)
     return render(request, "forms.html", {})
