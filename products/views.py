@@ -1,9 +1,10 @@
 from django.db.models import query
 from django.http import request
-from django.shortcuts import render
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse, Http404
 from .models import Product
-from .forms import ProductForm
+from .forms import ProductModelForm
 
 """ def ordinary_view(request, *args, **kwargs):
     my_request_data = dict(request.GET)
@@ -49,15 +50,29 @@ def product_list_view(request, *args, **kwargs):
     return render(request, "products/list.html", context)
 
 
+# def product_create_view(request):
+#     # print(request.POST)
+#     # print(request.GET)
+#     if request.method == "POST":
+#         post_data = request.POST or None
+#         if post_data != None:
+#             my_form = ProductForm(request.POST)
+#             if my_form.is_valid():
+#                 input_name = my_form.cleaned_data.get("name")
+#                 Product.objects.create(name=input_name)
+#             print("post_data", post_data)
+#     return render(request, "forms.html", {})
+
+
 def product_create_view(request):
-    # print(request.POST)
-    # print(request.GET)
-    if request.method == "POST":
-        post_data = request.POST or None
-        if post_data != None:
-            my_form = ProductForm(request.POST)
-            if my_form.is_valid():
-                input_name = my_form.cleaned_data.get("name")
-                Product.objects.create(name=input_name)
-            print("post_data", post_data)
-    return render(request, "forms.html", {})
+    form = ProductModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        print(form.cleaned_data)
+        data = form.cleaned_data
+        Product.objects.create(**data)
+        form = ProductModelForm()
+        # return HttpResponseRedirect("")
+        # return redirect("")
+    return render(request, "forms.html", {"form": form})
