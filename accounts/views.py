@@ -1,4 +1,5 @@
-from django.contrib.auth import auth, authenticate, login
+from django.contrib.auth import auth, authenticate, login, logout
+from django.http import request
 from django.shortcuts import redirect, render
 from .forms import LoginForm
 
@@ -22,3 +23,8 @@ def login_view(request):
             request.session["invalid_user"] = 1
 
     return render(request, "forms.html", {"form": form})
+
+
+def logut_view(request):
+    logout(request)
+    return redirect("/login")
