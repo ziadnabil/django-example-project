@@ -3,6 +3,8 @@ from django import forms
 
 # check for unique email & username
 
+non_allowed_usernames = ["trash"]
+
 User = get_user_model()
 
 
@@ -31,9 +33,18 @@ class RegisterForm(forms.form):
     def clean_username(self):
         username = self.cleaned_data.get("username")
         qs = User.objects.filter(username__iexact=username)
+        if username in non_allowed_usernames:
+            raise forms.ValidationError("This username is taken, pick another one")
         if qs.exists():
             raise forms.ValidationError("This username is taken, pick another one")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        qs = User.objects.filter(username__iexact=email)
+        if qs.exists():
+            raise forms.ValidationError("This email is used, pick another one")
+        return email
 
 
 class LoginForm(forms.Form):
